@@ -1,3 +1,3 @@
-﻿namespace Comum.Domain.Abstracts;
+﻿namespace Identiy.Domain.Abstracts;
 
 public interface IAggregate { }

@@ -1,29 +1,40 @@
 ﻿namespace Identiy.Domain.Abstracts;
 
 
-public abstract class Entity : IDomainEvent
+public abstract class Entity : IEvent, INotificationDomain
 {
-    private readonly List<IEvent> _events = new List<IEvent>();
+    readonly List<IDomainEvent> _events;
 
-    public decimal Id { get; private set; }
-    public bool IsDeleted { get; private set; }
+    readonly List<Notification> _notifications;
 
-    public void Remove() => IsDeleted = true;
-
-    public void SetId(decimal id)
+    protected Entity()
     {
-        if (Id != default)
-            throw new DomainExceptions("Esse registro já possui um id.");       
+        _events = new List<IDomainEvent>();
+        _notifications = new List<Notification>();
 
-        Id = id;
+        Id = Guid.NewGuid();
     }
 
-    public virtual void Validate() { }
+    public Guid Id { get; private set; }
+    public bool IsDeleted { get; private set; }
 
-    public void AddEvent(IEvent @event) => _events.Add(@event);
+    public IReadOnlyCollection<Notification> Notifications => _notifications;
+
+    public void Remove() => IsDeleted = true;
+  
+
+    public virtual void Validate() 
+    {
+        if (_notifications.Any() == true)
+            throw new DomainExceptions(_notifications);
+    }
+
+    public void RaiseDomainEvent(IDomainEvent @event) => _events.Add(@event);
 
     public void ClearEvents() => _events.Clear();   
 
-    public IReadOnlyCollection<IEvent> GetEvents() => _events;
-   
+    public IReadOnlyCollection<IDomainEvent> GetEvents() => _events;
+
+    public void AddNotification(Notification notification)
+        => _notifications.Add(notification);    
 }

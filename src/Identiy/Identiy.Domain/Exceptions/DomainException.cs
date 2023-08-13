@@ -2,7 +2,7 @@
 
 public class DomainExceptions : Exception
 {
-    public List<string>? Messages { get; }
+    public List<Notification>? Messages { get; }
 
     public DomainExceptions() { }    
 
@@ -11,7 +11,7 @@ public class DomainExceptions : Exception
     public DomainExceptions(string message, Exception innerException) 
         : base(message, innerException) { }
     
-    public DomainExceptions(List<string> messages) 
+    public DomainExceptions(List<Notification> messages) 
         : base(messages.ToString()) => Messages = messages;
 
 }

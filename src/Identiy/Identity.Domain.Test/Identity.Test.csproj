@@ -22,4 +22,12 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Identiy.Domain\Identiy.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="UseCases\User\" />
+  </ItemGroup>
+
 </Project>

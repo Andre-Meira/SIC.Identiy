@@ -1,12 +1,10 @@
 ﻿using Identiy.Domain.Abstracts;
-using System.ComponentModel.DataAnnotations;
-using System.IO;
 
 namespace Identiy.Domain.AgregattesModel.ValueObjects;
 
-public record Endereco
+public record Address
 {
-    public Endereco(
+    public Address(
         string rua,
         string numero,
         string cidade,
@@ -17,9 +15,7 @@ public record Endereco
         Numero = numero;
         Cidade = cidade;
         Estado = estado;
-        CodigoPostal = codigoPostal;
-
-        Validate();
+        CodigoPostal = codigoPostal;       
     }
 
     public string Rua { get; }
@@ -28,27 +24,23 @@ public record Endereco
     public string Estado { get; }
     public string CodigoPostal { get; }
 
-
-    public void Validate()
-    {
-        List<string> errors = new List<string>();
+    public void Validate(INotificationDomain notification)
+    {        
 
         if (string.IsNullOrWhiteSpace(Rua))
-            errors.Add("Rua não poder vazio ou nulo.");
+            notification.AddNotification(new Notification("Rua", "Rua não poder ser nulo ou vazio"));
 
         if (string.IsNullOrWhiteSpace(Numero))
-            errors.Add("Numero não poder vazio ou nulo.");
+            notification.AddNotification(new Notification("Numero", "Numero não poder ser nulo ou vazio"));
 
         if (string.IsNullOrWhiteSpace(Cidade))
-            errors.Add("Cidade não poder vazio ou nulo");
+            notification.AddNotification(new Notification("Cidade", "Cidade não poder ser nulo ou vazio"));
 
         if (string.IsNullOrWhiteSpace(Estado))
-            errors.Add("Estado não poder vazio ou nulo");
+            notification.AddNotification(new Notification("Estado", "Estado não poder ser nulo ou vazio"));
 
         if (string.IsNullOrWhiteSpace(CodigoPostal))
-            errors.Add("CodigoPostal não poder vazio ou nulo");
-
-        if (errors.Any() == false) throw new DomainExceptions(errors);
+            notification.AddNotification(new Notification("CodigoPostal", "CodigoPostal não poder ser nulo ou vazio"));
     }
 
     public string FormatForDisplay()
