@@ -1,10 +1,10 @@
 ﻿namespace User.Domain.AgregattesModel.UserAgregattes;
 
-public sealed class Client : User
+public sealed class Client : UserBase
 {
-    public bool AcceptedNotification { get; private set; }
+    public bool AcceptedNotification { get; private set; }     
 
-    public Client(string nome, string email, string password) 
-        : base(nome, nome, password) { }
+    public Client(string nome, string email) 
+        : base(nome, email) { }
     
 }
