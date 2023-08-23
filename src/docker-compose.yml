@@ -1,0 +1,12 @@
+version: '3.6'
+
+services:
+  postgres:
+    image: postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: "USER"
+      POSTGRES_PASSWORD: "USER123"
+      POSTGRES_DB: "SIC"          
+    ports:
+      - "5432:5432"
