@@ -4,5 +4,5 @@ namespace User.Domain.Abstracts;
 
 public interface IDomainEvent : INotification 
 {
-    public Guid id { get; }
+    public Guid Id { get; }
 }

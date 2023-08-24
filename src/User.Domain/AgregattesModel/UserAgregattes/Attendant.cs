@@ -1,8 +1,15 @@
 ﻿
+using User.Domain.Abstracts;
+
 namespace User.Domain.AgregattesModel.UserAgregattes;
 
-public class Attendant : UserBase
+public class Attendant : Entity
 {
-    public Attendant(string nome, string email) 
-        : base(nome, email) { }    
+    public UserAcess UserAcess { get; private set; }
+
+
+    public Attendant()
+    {
+        
+    }
 }

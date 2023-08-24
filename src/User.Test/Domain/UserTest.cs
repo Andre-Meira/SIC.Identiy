@@ -4,7 +4,7 @@ using User.Domain.AgregattesModel.ValueObjects;
 
 namespace User.Test.Domain;
 
-public class User
+public class UserTest
 {
 
     [InlineData("")]

@@ -6,21 +6,28 @@ public abstract class Entity : IEvent, INotificationDomain
 
     readonly List<Notification> _notifications;
 
+    private Guid _id;
+
     protected Entity()
     {
         _events = new List<IDomainEvent>();
         _notifications = new List<Notification>();        
-    }
+    }    
 
-    public Guid Id { get; private set; }
     public bool IsDeleted { get; private set; }
+
+    public Guid Id => _id;
 
     public IReadOnlyCollection<Notification> Notifications => _notifications;
 
     public virtual void Create()
     {
         Validate();
-        Id = Guid.NewGuid();
+
+        if (_id != default)
+            throw new DomainExceptions("já existe um id cadastrado para essa entidade.");
+
+        _id = Guid.NewGuid();
     }
 
     public void Remove() => IsDeleted = true;  

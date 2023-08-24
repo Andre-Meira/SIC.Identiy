@@ -1,10 +1,9 @@
-﻿namespace User.Domain.AgregattesModel.UserAgregattes;
+﻿using User.Domain.Abstracts;
 
-public sealed class Client : UserBase
-{
-    public bool AcceptedNotification { get; private set; }     
+namespace User.Domain.AgregattesModel.UserAgregattes;
 
-    public Client(string nome, string email) 
-        : base(nome, email) { }
+public sealed class Client : Entity
+{ 
+
     
 }

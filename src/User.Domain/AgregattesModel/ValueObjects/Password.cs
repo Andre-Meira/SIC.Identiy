@@ -13,14 +13,14 @@ public record Password : ValueObject
     private const string DigitPattern = @"\d";
     private const string SpecialCharacterPattern = @"[@#$%^&+=]";
     
-    private readonly string _passwordOriginal;
+    private readonly string? _passwordOriginal;
 
 
     public string Value { get; }
 
 	public Password(string password)
     {
-        Value = HashPassword(password);
+        Value = password != null ? HashPassword(password): "";
         _passwordOriginal = password;
     }
 

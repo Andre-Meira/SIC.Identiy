@@ -5,14 +5,12 @@ using User.Domain.AgregattesModel.ValueObjects;
 
 namespace User.Infrastructure.EntityConfigurations;
 
-internal class Client_Mapping : IEntityTypeConfiguration<Client>
+internal class Attendant_Mappings : IEntityTypeConfiguration<Attendant>
 {
-    public void Configure(EntityTypeBuilder<Client> builder)
+    public void Configure(EntityTypeBuilder<Attendant> builder)
     {
-        builder.ToTable("Client");
-
-        builder.HasKey(e => e.Id);
-        builder.ToTable("UserAcess");
+        builder.HasKey(x => x.Id);
+        builder.ToTable("Attendant");
 
         builder.Property(e => e.Id).HasColumnName("ID");
         builder.Property(e => e.DtCreation).HasColumnName("DT_CREATED").IsRequired();
@@ -21,6 +19,8 @@ internal class Client_Mapping : IEntityTypeConfiguration<Client>
         builder.Property(e => e.Email).HasColumnName("EMAIL").HasConversion
             (valueEmail => valueEmail.Value,
              Value => new Email(Value))
-            .IsUnicode(true);
+            .IsUnicode(true)
+            .IsRequired();
     }
 }
+

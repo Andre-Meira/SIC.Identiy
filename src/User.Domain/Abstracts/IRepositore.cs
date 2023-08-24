@@ -8,3 +8,9 @@ public interface IRepository<T> where T : IAggregate
     public Task<T> Get(decimal id, CancellationToken cancellation = default);
     public IEnumerable<T> GetAll(CancellationToken cancellation = default);
 }
+
+
+public interface IUnitOfWork
+{
+    Task SaveChangesEntity();
+}
