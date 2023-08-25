@@ -13,7 +13,7 @@ public static class Configuration
         string? connectionString =  Environment.GetEnvironmentVariable("connectionString");
 
         if (connectionString == null) throw new ArgumentNullException(nameof(connectionString));
-        service.AddDbContext<UserContext>(options => options.UseOracle(connectionString), ServiceLifetime.Transient);
+        service.AddDbContext<UserContext>(options => options.UseNpgsql(connectionString), ServiceLifetime.Transient);
 
         service.AddRepositores();
 
