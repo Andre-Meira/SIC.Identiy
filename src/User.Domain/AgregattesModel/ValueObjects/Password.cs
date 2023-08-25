@@ -2,9 +2,11 @@
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace User.Domain.AgregattesModel.ValueObjects;
 
+[NotMapped]
 public record Password : ValueObject
 {
     private const int MinimumLength = 12;
@@ -15,13 +17,12 @@ public record Password : ValueObject
     
     private readonly string? _passwordOriginal;
 
-
     public string Value { get; }
 
-	public Password(string password)
+	public Password(string value)
     {
-        Value = password != null ? HashPassword(password): "";
-        _passwordOriginal = password;
+        Value = value != null ? HashPassword(value) : "";
+        _passwordOriginal = value;
     }
 
     public bool IsComplex(string password)

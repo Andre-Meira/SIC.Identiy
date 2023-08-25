@@ -1,18 +1,13 @@
 ﻿using MediatR;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Net.Mail;
 using User.Domain.Abstracts;
 
 namespace User.Domain.AgregattesModel.ValueObjects;
 
-public record Email : ValueObject
-{   
-    public Email(string value)
-    {
-        Value = value;
-    }
-
-    public string Value { get; private set; }
-
+[NotMapped]
+public record Email(string Value) : ValueObject
+{           
     public static Email Create(string email) => new Email(email); 
 
     public override void Validate()

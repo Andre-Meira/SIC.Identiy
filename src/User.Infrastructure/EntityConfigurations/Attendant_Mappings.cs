@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using User.Domain.AgregattesModel.UserAgregattes;
-using User.Domain.AgregattesModel.ValueObjects;
+using User.Domain.AgregattesModel.AttendantAgregattes;
 
 namespace User.Infrastructure.EntityConfigurations;
 
@@ -9,18 +8,14 @@ internal class Attendant_Mappings : IEntityTypeConfiguration<Attendant>
 {
     public void Configure(EntityTypeBuilder<Attendant> builder)
     {
-        builder.HasKey(x => x.Id);
+        builder.HasKey(t => t.Id);
         builder.ToTable("Attendant");
 
-        builder.Property(e => e.Id).HasColumnName("ID");
-        builder.Property(e => e.DtCreation).HasColumnName("DT_CREATED").IsRequired();
-        builder.Property(e => e.Status).HasColumnName("STATUS").IsRequired();
+        builder.Property(t => t.Id).HasColumnName("ID").HasColumnType("uuid");
+        builder.Property(t => t.IdUser).HasColumnName("ID_USER").HasColumnType("uuid");
 
-        builder.Property(e => e.Email).HasColumnName("EMAIL").HasConversion
-            (valueEmail => valueEmail.Value,
-             Value => new Email(Value))
-            .IsUnicode(true)
-            .IsRequired();
+        builder.Property(t => t.Name).HasColumnName("NAME");
+        builder.HasOne(tc => tc.UserAcess).WithOne().HasForeignKey<Attendant>(f => f.IdUser);
     }
 }
 

@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.Design;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 using User.Domain.Abstracts;
 using User.Domain.AgregattesModel.UserAgregattes.EventsDomain;
 using User.Domain.AgregattesModel.ValueObjects;
@@ -7,15 +7,19 @@ using User.Domain.Enums;
 namespace User.Domain.AgregattesModel.UserAgregattes;
 
 public class UserAcess : Entity, IAggregate
-{
-    public Email Email { get; private set; }
-    public Password Password { get; private set; }
+{    
+    public virtual Email Email { get; private set; }
+        
+    public virtual Password Password { get; private set; }
+    
     public string Name { get; private set; }
-    public DateTime DtCreation { get; }    
+    public DateTime DtCreation { get; }
     public Status Status { get; private set; }
     public UserTypeEnum UserType { get; }
 
-    protected UserAcess(
+    protected UserAcess() { }
+
+    public UserAcess(
         string name,
         string email,
         string password,
@@ -26,8 +30,10 @@ public class UserAcess : Entity, IAggregate
         Password = Password.Create(password);
         Email = Email.Create(email);
         DtCreation = DateTime.Now;
-        Status = Status.Enable;        
-        UserType = userType;    
+        Status = Status.Enable;
+        UserType = userType;
+
+        Validate();
     }
 
     public override void Validate()
@@ -35,13 +41,14 @@ public class UserAcess : Entity, IAggregate
         if (string.IsNullOrEmpty(Name) == true)
             AddNotification(new Notification("Name", "Nome não pode ser nulo ou vazio"));
 
-        Email.Validate();        
-        AddNotification(Email.Notifications.ToList());
+        Email.Validate();
         Password.Validate();
-        AddNotification(Password.Notifications.ToList());        
+
+        AddNotification(Email.Notifications.ToList());
+        AddNotification(Password.Notifications.ToList());
 
         base.Validate();
-    }    
+    }
 
     public void ChangePassword(string password)
     {
@@ -56,17 +63,18 @@ public class UserAcess : Entity, IAggregate
     public override void Create()
     {
         Validate();
-        
+        base.Create();
 
         if (UserType == UserTypeEnum.Client)
         {
-            
-            RaiseDomainEvent(new UserClientCreatedDomainEvent(Id));
+            var createdEvent = new UserClientCreatedDomainEvent(Id, Name, Email.Value);
+            RaiseDomainEvent(createdEvent);
         }
-        else 
+        else
         {
-        
-        }        
+            var createdEvent = new UserAttendantCreatedDomainEvent(Id, Name, Email.Value);
+            RaiseDomainEvent(createdEvent);
+        }
     }
 
 }

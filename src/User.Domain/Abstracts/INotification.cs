@@ -8,4 +8,4 @@ public interface INotificationDomain
 
 }
 
-public sealed record Notification(string key, string value);
+public sealed record Notification(string Key, string Value);

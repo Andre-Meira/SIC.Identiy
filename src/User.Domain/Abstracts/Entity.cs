@@ -1,4 +1,6 @@
-﻿namespace User.Domain.Abstracts;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace User.Domain.Abstracts;
 
 public abstract class Entity : IEvent, INotificationDomain
 {
@@ -18,6 +20,7 @@ public abstract class Entity : IEvent, INotificationDomain
 
     public Guid Id => _id;
 
+    [NotMapped]
     public IReadOnlyCollection<Notification> Notifications => _notifications;
 
     public virtual void Create()

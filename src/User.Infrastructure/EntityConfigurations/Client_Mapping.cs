@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using User.Domain.AgregattesModel.UserAgregattes;
-using User.Domain.AgregattesModel.ValueObjects;
+using User.Domain.AgregattesModel.ClientAgregattes;
 
 namespace User.Infrastructure.EntityConfigurations;
 
@@ -10,17 +9,12 @@ internal class Client_Mapping : IEntityTypeConfiguration<Client>
     public void Configure(EntityTypeBuilder<Client> builder)
     {
         builder.ToTable("Client");
+        builder.HasKey(t => t.Id);
 
-        builder.HasKey(e => e.Id);
-        builder.ToTable("UserAcess");
+        builder.Property(t => t.Id).HasColumnName("ID").HasColumnType("uuid");
+        builder.Property(t => t.IdUser).HasColumnName("ID_USER").HasColumnType("uuid");
 
-        builder.Property(e => e.Id).HasColumnName("ID");
-        builder.Property(e => e.DtCreation).HasColumnName("DT_CREATED").IsRequired();
-        builder.Property(e => e.Status).HasColumnName("STATUS").IsRequired();
-
-        builder.Property(e => e.Email).HasColumnName("EMAIL").HasConversion
-            (valueEmail => valueEmail.Value,
-             Value => new Email(Value))
-            .IsUnicode(true);
+        builder.Property(t => t.Name).HasColumnName("NAME");
+        builder.HasOne(tc => tc.UserAcess).WithOne().HasForeignKey<Client>(f => f.IdUser);
     }
 }

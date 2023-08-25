@@ -1,4 +1,5 @@
 ﻿using User.Domain.Abstracts;
+using User.Domain.AgregattesModel;
 using User.Domain.AgregattesModel.UserAgregattes;
 using User.Domain.AgregattesModel.ValueObjects;
 
@@ -15,8 +16,7 @@ public class UserTest
     [Trait("Usuario", "Email")]    
     public void Create_User_With_Invalid_Email_Thorows_DomainExecptions(string email)
     {
-        Assert.Throws<DomainExceptions>(() => new Attendant("André", email));
-        Assert.Throws<DomainExceptions>(() => new Client("André", email));        
+        Assert.Throws<DomainExceptions>(() => new UserAcess("Andre", email, "Teste11_123@MBA"));                
     }
 
     [InlineData("andre.meira@gmail.com")]
@@ -26,11 +26,8 @@ public class UserTest
     [Trait("Usuario", "Email")]
     public void Create_User_With_Valid_Email(string email)
     {
-        new Attendant("André", email);
-        new Client("André", email);
+        new UserAcess("Andre", email, "Teste11_123@MBA");
     }
-
-
 
     [InlineData("")]
     [InlineData(null)]
@@ -42,7 +39,6 @@ public class UserTest
     {
         Assert.Throws<DomainExceptions>(() => new UserAcess("Andre", "andre.meira@hotmail.com", password));        
     }
-
 
 
 
