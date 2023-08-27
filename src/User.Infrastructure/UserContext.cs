@@ -17,25 +17,28 @@ internal class UserContext : DbContext, IUnitOfWork
     public DbSet<Attendant> Attendant { get; private set; } = null!;
 
     public DbSet<Client> Client { get; private set; } = null!;
-
-    private readonly ILogger<UserContext> _logger;
+    
     private readonly IMediator _mediator;
+    private readonly ILoggerFactory _loggerFactory;
+
 
     public UserContext(
         DbContextOptions<UserContext> options,
-        ILogger<UserContext> logger,
+        ILoggerFactory logger,
         IMediator mediator
         ) : base(options)
     {
         _mediator = mediator;
-        _logger = logger;         
+        _loggerFactory = logger;        
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.EnableSensitiveDataLogging(true)
-            .EnableDetailedErrors()
-            .UseQueryTrackingBehavior(QueryTrackingBehavior.TrackAll);
+        optionsBuilder
+            .UseLoggerFactory(_loggerFactory)
+            .EnableSensitiveDataLogging(true)
+            .EnableDetailedErrors(true)
+            .UseQueryTrackingBehavior(QueryTrackingBehavior.TrackAll);            
 
         base.OnConfiguring(optionsBuilder);
     }
@@ -83,7 +86,7 @@ internal class UserContext : DbContext, IUnitOfWork
             }
             catch (Exception err)
             {
-                _logger.LogError(err.Message);
+                _loggerFactory.CreateLogger<UserContext>().LogError(err.Message);
             }
         }
     }

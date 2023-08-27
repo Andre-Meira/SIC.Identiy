@@ -8,7 +8,7 @@ public abstract class Entity : IEvent, INotificationDomain
 
     readonly List<Notification> _notifications;
 
-    private Guid _id;
+    private Guid _id = Guid.Empty;
 
     protected Entity()
     {
@@ -18,7 +18,7 @@ public abstract class Entity : IEvent, INotificationDomain
 
     public bool IsDeleted { get; private set; }
 
-    public Guid Id => _id;
+    public Guid Id { get; private set; }
 
     [NotMapped]
     public IReadOnlyCollection<Notification> Notifications => _notifications;
@@ -27,10 +27,11 @@ public abstract class Entity : IEvent, INotificationDomain
     {
         Validate();
 
-        if (_id != default)
+        if (_id.Equals(Guid.Empty) == false)
             throw new DomainExceptions("já existe um id cadastrado para essa entidade.");
 
         _id = Guid.NewGuid();
+        Id = _id;   
     }
 
     public void Remove() => IsDeleted = true;  

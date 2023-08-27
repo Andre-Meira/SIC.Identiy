@@ -29,7 +29,7 @@ public class UserAcess : Entity, IAggregate
         Name = name;
         Password = Password.Create(password);
         Email = Email.Create(email);
-        DtCreation = DateTime.Now;
+        DtCreation = DateTime.Now.ToUniversalTime();
         Status = Status.Enable;
         UserType = userType;
 

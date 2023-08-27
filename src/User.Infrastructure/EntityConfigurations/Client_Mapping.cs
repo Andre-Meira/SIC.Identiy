@@ -11,10 +11,10 @@ internal class Client_Mapping : IEntityTypeConfiguration<Client>
         builder.ToTable("Client");
         builder.HasKey(t => t.Id);
 
-        builder.Property(t => t.Id).HasColumnName("ID").HasColumnType("uuid");
-        builder.Property(t => t.IdUser).HasColumnName("ID_USER").HasColumnType("uuid");
+        builder.Property(t => t.Id).HasColumnName("id").HasColumnType("uuid");
+        builder.Property(t => t.IdUser).HasColumnName("id_user").HasColumnType("uuid");
 
-        builder.Property(t => t.Name).HasColumnName("NAME");
+        builder.Property(t => t.Name).HasColumnName("name");
         builder.HasOne(tc => tc.UserAcess).WithOne().HasForeignKey<Client>(f => f.IdUser);
     }
 }

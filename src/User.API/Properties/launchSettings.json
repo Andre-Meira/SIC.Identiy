@@ -2,11 +2,12 @@
   "profiles": {
     "User.API": {
       "commandName": "Project",
-      "launchBrowser": true,
+      //"launchBrowser": true,
       "launchUrl": "swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "connectionString": "Host=localhost;Port=5432;Username=USER;Password=USER123;Database=SIC"
+        "connectionString": "Host=localhost;Port=5432;Username=USER;Password=USER123;Database=SIC",
+        "connectionMongo": "mongodb://localhost:27017"
 
       },
       "dotnetRunMessages": true,

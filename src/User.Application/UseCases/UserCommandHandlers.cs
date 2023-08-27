@@ -19,7 +19,7 @@ internal class CreateUserCommandHandler : IRequestHandler<CreateUserCommand>
         Email email = Email.Create(request.Email);
         UserAcess? userAcess = await _userAcessRepository.GetUserByEmail(email, cancellationToken);
 
-        if (userAcess == null) throw new DomainExceptions("Já existe um usuario com esse Email");
+        if (userAcess != null) throw new DomainExceptions("Já existe um usuario com esse Email");
 
         UserAcess user = new UserAcess(request.Name, request.Email, request.Password, request.UserType);
         user.Validate();
