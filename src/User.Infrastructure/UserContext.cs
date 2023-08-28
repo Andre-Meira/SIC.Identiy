@@ -21,7 +21,6 @@ internal class UserContext : DbContext, IUnitOfWork
     private readonly IMediator _mediator;
     private readonly ILoggerFactory _loggerFactory;
 
-
     public UserContext(
         DbContextOptions<UserContext> options,
         ILoggerFactory logger,
@@ -60,11 +59,18 @@ internal class UserContext : DbContext, IUnitOfWork
 
 
     public async Task SaveChangesEntity(CancellationToken cancellationToken = default)
-    {        
-        SetEntityState();
-        await DispatchDomainEvents().ConfigureAwait(false);
-        await base.SaveChangesAsync(cancellationToken);
-
+    {
+        try
+        {
+            SetEntityState();
+            await DispatchDomainEvents().ConfigureAwait(false);
+            await base.SaveChangesAsync(cancellationToken);
+        }
+        catch (Exception err)
+        {
+            _loggerFactory.CreateLogger<UserContext>()
+                .LogError($"Falha ao savar os registros {err.Message}");
+        }
     }   
 
     private async Task DispatchDomainEvents()
