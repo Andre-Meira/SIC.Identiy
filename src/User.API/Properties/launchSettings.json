@@ -7,7 +7,9 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "connectionString": "Host=localhost;Port=5432;Username=USER;Password=USER123;Database=SIC",
-        "connectionMongo": "mongodb://localhost:27017"
+        "connectionMongo": "mongodb://localhost:27017",
+        "SeqLogging": "http://localhost:5341",
+        "OtlpEndPoint": "http://localhost:4317"
 
       },
       "dotnetRunMessages": true,

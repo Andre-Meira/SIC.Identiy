@@ -17,12 +17,12 @@ internal class UserAcessRepository : IUserAcessRepository
 
     public void Add(UserAcess Entity) => _userContext.Add(Entity);
     
-    public Task<UserAcess?> Get(decimal id, CancellationToken cancellation = default)
+    public Task<UserAcess?> Get(Guid id, CancellationToken cancellation = default)
         => _userContext.UserAcesses.FindAsync(id, cancellation).AsTask();
 
 
     public IEnumerable<UserAcess> GetAll(int itemsPerPage = 10)
-        => _userContext.UserAcesses.Take(10);
+        => _userContext.UserAcesses.Take(itemsPerPage);
 
     public Task<UserAcess?> GetUserByEmail(Email email, 
         CancellationToken cancellationToken = default)

@@ -2,8 +2,8 @@
 
 public enum Status
 {
-    Enable = 0,
-    Disable = 1
+    Enable = 1,
+    Disable = 0
 }
 
 public enum StutusIncident

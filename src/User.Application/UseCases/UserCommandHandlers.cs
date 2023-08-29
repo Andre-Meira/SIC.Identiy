@@ -7,14 +7,16 @@ using User.Domain.Repositores;
 
 namespace User.Application.UseCases;
 
-internal class CreateUserCommandHandler : IRequestHandler<CreateUserCommand>
+internal class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Guid>,
+    IRequestHandler<DisableUserCommand>
 {
     private readonly IUserAcessRepository _userAcessRepository;
 
     public CreateUserCommandHandler(IUserAcessRepository userAcessRepository)
         => _userAcessRepository = userAcessRepository;
 
-    public async Task Handle(CreateUserCommand request, CancellationToken cancellationToken)
+    // --> Create USER
+    public async Task<Guid> Handle(CreateUserCommand request, CancellationToken cancellationToken)
     {
         Email email = Email.Create(request.Email);
         UserAcess? userAcess = await _userAcessRepository.GetUserByEmail(email, cancellationToken);
@@ -25,6 +27,18 @@ internal class CreateUserCommandHandler : IRequestHandler<CreateUserCommand>
         user.Validate();
 
         _userAcessRepository.Add(user);
+        await _userAcessRepository.UnitOfWork.SaveChangesEntity(cancellationToken);
+
+        return user.Id;
+    }
+    
+    // --> Diable User 
+    public async Task Handle(DisableUserCommand request, CancellationToken cancellationToken)
+    {        
+        UserAcess? userAcess = await _userAcessRepository.Get(request.idUser, cancellationToken);        
+        if (userAcess == null) throw new DomainExceptions("Nenhum usuario encontrado com esse id.");
+
+        userAcess.Disable(request.Reason);
         await _userAcessRepository.UnitOfWork.SaveChangesEntity(cancellationToken);
     }
 }

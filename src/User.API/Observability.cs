@@ -1,4 +1,6 @@
-﻿using OpenTelemetry;
+﻿using Microsoft.AspNetCore.Mvc.ApplicationParts;
+using OpenTelemetry;
+using OpenTelemetry.Exporter;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using Serilog;
@@ -10,18 +12,17 @@ namespace User.API;
 
 public static class Observability
 {
-    public static ConfigureHostBuilder AddLogginSerilog(this ConfigureHostBuilder host)
-    {
+    public static ConfigureHostBuilder AddLogginSerilog(this ConfigureHostBuilder host, ConfigurationObservability config)
+    {        
         host.UseSerilog((context, configuration) =>
         {
-            configuration.WriteTo.Console(outputTemplate: @"[{Timestamp:HH:mm:ss} {Level:u3} {SourceContext} {Properties:j} Mensagem:{Message:lj}{NewLine}{Exception}");
-            
+            configuration.WriteTo.Console(outputTemplate: @"[{Timestamp:HH:mm:ss} {Level:u3} {SourceContext} {Properties:j} Mensagem:{Message:lj}{NewLine}{Exception}");            
             configuration.MinimumLevel.Override("Microsoft", LogEventLevel.Warning);
-            configuration.MinimumLevel.Override("Microsoft.Hosting.Lifetime", LogEventLevel.Information);
-            configuration.MinimumLevel.Override("Microsoft.AspNetCore.Hosting.Diagnostics", LogEventLevel.Information);
-            configuration.MinimumLevel.Override("Microsoft.EntityFrameworkCore.Database.Command", LogEventLevel.Information);
             configuration.Enrich.FromLogContext();
-            configuration.WriteTo.Seq("http://localhost:5341");
+
+            if (config.EndpointLoggin != null)
+                configuration.WriteTo.Seq(config.EndpointLoggin.ToString());
+
             configuration.Enrich.With<TraceIdEnricher>();            
         });        
 
@@ -39,18 +40,38 @@ public static class Observability
         return services;
     }
     
-    public static OpenTelemetryBuilder AddTracing(this IServiceCollection services)
-        => services.AddOpenTelemetry()
+    public static OpenTelemetryBuilder AddTracing(this IServiceCollection services, 
+        ConfigurationObservability configure)
+    {
+         return services.AddOpenTelemetry()
             .WithTracing(tracing =>
             {
                 ResourceBuilder resourceBuilder = ResourceBuilder.CreateDefault()
                    .AddService("User.API");
 
-                tracing.AddAspNetCoreInstrumentation();
-                tracing.AddOtlpExporter();
-                tracing.SetResourceBuilder(resourceBuilder);                
-            });    
-    
+                tracing.AddAspNetCoreInstrumentation(asp =>
+                {
+                    asp.Filter = FilterReques;
+                    asp.EnrichWithHttpRequest = (Activity activity, HttpRequest request) =>
+                    {
+                        activity.AddTag("TraceId", activity.TraceId);
+                    };
+                });
+                tracing.AddOtlpExporter(e =>
+                {
+                    e.Endpoint = configure.EndpointOtlp;
+                    e.Protocol = OtlpExportProtocol.Grpc;
+                });
+                tracing.SetResourceBuilder(resourceBuilder);
+            });
+    }
+
+    private static bool FilterReques(HttpContext http)
+    {
+        return !http.Request.Path.Value!.Contains("/swagger")
+            & !http.Request.Path.Value!.Contains("_framework")
+            & !http.Request.Path.Value!.Contains("_vs");
+    }
 }
 
 partial class TraceIdEnricher : ILogEventEnricher
@@ -63,5 +84,19 @@ partial class TraceIdEnricher : ILogEventEnricher
             var traceIdProperty = propertyFactory.CreateProperty("TraceId", currentActivity.TraceId);
             logEvent.AddPropertyIfAbsent(traceIdProperty);
         }
+    }
+}
+
+public class ConfigurationObservability
+{
+    public Uri? EndpointOtlp { get; set; }
+
+    public Uri? EndpointLoggin { get; set; }
+
+    public string ApplicationName { get; set; }
+
+    public ConfigurationObservability(string applicationName)
+    {
+        ApplicationName = applicationName;  
     }
 }

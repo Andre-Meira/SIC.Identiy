@@ -73,7 +73,7 @@
     "servicesBaseUri": null
   },
   "storage": {
-    "secretKey": "XM7UXJPVVvlGE13Z+gdXiP2MophctpRKK+vjDtbLMyE=",
+    "secretKey": "RMZlFbnHfpXJwRGdBPf1vWnf7NvSjkI2znoCr295hGQ=",
     "flare": {
       "concurrentReaderLimit": null,
       "readerParallelismLimit": null,

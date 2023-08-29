@@ -1,10 +1,11 @@
 ﻿using MediatR;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using User.Domain.Enums;
 
 namespace User.Application.Commands;
 
-public class CreateUserCommand : IRequest
+public record CreateUserCommand : IRequest<Guid>
 {
     [EmailAddress]
     [Required(AllowEmptyStrings = false)]    
@@ -17,4 +18,13 @@ public class CreateUserCommand : IRequest
     public string Name { get; set; } = null!;
 
     public UserTypeEnum UserType { get; set; } 
+}
+
+public record DisableUserCommand : IRequest
+{
+    
+    public Guid idUser;
+
+    [Required]
+    public string Reason { get; set; } = null!;
 }

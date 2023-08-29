@@ -60,6 +60,12 @@ public class UserAcess : Entity, IAggregate
         Password = newPassword;
     }
 
+    public void Disable(string reason)
+    {
+        RaiseDomainEvent(new UserDisabledDomainEvent(Id, reason, Email.Value));
+        Status = Status.Disable;
+    }
+
     public override void Create()
     {
         Validate();

@@ -8,6 +8,14 @@ namespace User.API.Filter;
 
 public class ExceptionCustomFIlter : IExceptionFilter
 {
+    private readonly ILogger<ExceptionCustomFIlter> _logger; 
+
+    public ExceptionCustomFIlter(
+        ILogger<ExceptionCustomFIlter> logger)
+    {
+        _logger = logger;
+    }
+
     public void OnException(ExceptionContext context)
     {       
         if (context.Exception is DomainExceptions)
@@ -22,5 +30,7 @@ public class ExceptionCustomFIlter : IExceptionFilter
             ObjectResult badRequest = new ObjectResult(resultController) { StatusCode = 400};            
             context.Result = badRequest;
         }
+
+        _logger.LogError(context.Exception, $"Request error: {context.Exception.Message}");
     }
 }

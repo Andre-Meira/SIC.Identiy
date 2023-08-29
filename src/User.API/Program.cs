@@ -2,9 +2,16 @@ using User.API.Filter;
 using User.Application;
 using User.API;
 
+string endpointSeq = Environment.GetEnvironmentVariable("SeqLogging") ?? throw new ArgumentNullException(nameof(endpointSeq));
+string endpoinOtlp = Environment.GetEnvironmentVariable("OtlpEndPoint") ?? throw new ArgumentNullException(nameof(endpoinOtlp));
+
+ConfigurationObservability configuration = new ConfigurationObservability("User.API");
+configuration.EndpointLoggin = new Uri(endpointSeq);
+configuration.EndpointOtlp = new Uri(endpoinOtlp);
+
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Host.AddLogginSerilog();
+builder.Host.AddLogginSerilog(configuration);
 
 builder.Services.AddControllers(e =>
 {
@@ -12,7 +19,7 @@ builder.Services.AddControllers(e =>
 });
 
 builder.Services.ConfigureLogging();
-builder.Services.AddTracing();
+builder.Services.AddTracing(configuration);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
