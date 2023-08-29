@@ -16,6 +16,7 @@ public class BearerAuthorizationHandler : AuthorizationHandler<BearerRequirement
 
         if (token.IsAuthenticate == false)
         {
+            // TODO Melhorar estrutura de erro.
             context.Fail(); 
             return Task.CompletedTask;
         }
