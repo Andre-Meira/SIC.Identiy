@@ -1,24 +1,27 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
+using User.API.Authorization;
 using User.API.Models;
 using User.Application.Commands;
 using User.Application.DTO;
 using User.Application.Queries;
-using User.Domain.AgregattesModel.UserAgregattes;
 
 namespace User.API.Controllers.v1
 {
-    [ApiController]
+    [ApiController]    
     [Route("api/user")]
+    [Authorize]
     public class UserController : BaseApiController
     {
         private readonly IMediator _mediator;
         public UserController(IMediator mediator) => _mediator = mediator;
 
-        [HttpPost]
+        [HttpPost]        
         [ProducesResponseType(typeof(ResultController), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ResultController), StatusCodes.Status400BadRequest)]
+        
         public async Task<IActionResult> CreateUser([FromForm, Required] CreateUserCommand userCommand,
             CancellationToken cancellationToken)
         {

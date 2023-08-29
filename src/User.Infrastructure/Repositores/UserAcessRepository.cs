@@ -35,6 +35,7 @@ internal class UserAcessRepository : IUserAcessRepository
         CancellationToken cancellationToken = default)
     {
         return _userContext.UserAcesses.FirstOrDefaultAsync(e => 
-               (email.Equals(e.Email) &&  password.Equals(e.Password)), cancellationToken);
+               (email.Value == e.Email.Value &&  e.Password.Value == password.Value)
+               , cancellationToken);
     }
 }

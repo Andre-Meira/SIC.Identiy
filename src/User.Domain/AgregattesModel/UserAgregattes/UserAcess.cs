@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using User.Domain.Abstracts;
+﻿using User.Domain.Abstracts;
 using User.Domain.AgregattesModel.UserAgregattes.EventsDomain;
 using User.Domain.AgregattesModel.ValueObjects;
 using User.Domain.Enums;
