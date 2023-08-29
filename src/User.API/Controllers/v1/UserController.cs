@@ -18,7 +18,8 @@ namespace User.API.Controllers.v1
         private readonly IMediator _mediator;
         public UserController(IMediator mediator) => _mediator = mediator;
 
-        [HttpPost]        
+        [HttpPost]
+        [AllowAnonymous]
         [ProducesResponseType(typeof(ResultController), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ResultController), StatusCodes.Status400BadRequest)]
         

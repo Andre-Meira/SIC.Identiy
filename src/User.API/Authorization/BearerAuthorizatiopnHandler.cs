@@ -15,7 +15,10 @@ public class BearerAuthorizationHandler : AuthorizationHandler<BearerRequirement
         JwtProvider token =  JwtProvider.GetToken(context.User);
 
         if (token.IsAuthenticate == false)
-            throw new ExceptionRequest("Usuario não possui acesso", HttpStatusCode.Unauthorized);
+        {
+            context.Fail(); 
+            return Task.CompletedTask;
+        }
 
         Activity.Current?.SetUser(token.Id);
         context.Succeed(requirement);
