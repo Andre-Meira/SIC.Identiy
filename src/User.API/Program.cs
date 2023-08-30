@@ -1,7 +1,6 @@
 using User.API.Filter;
 using User.Application;
 using User.API;
-using User.API.Authorization;
 
 string endpointSeq = Environment.GetEnvironmentVariable("SeqLogging") 
     ?? throw new ArgumentNullException(nameof(endpointSeq));

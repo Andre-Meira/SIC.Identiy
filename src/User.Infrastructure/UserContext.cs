@@ -6,6 +6,7 @@ using User.Domain.AgregattesModel.AttendantAgregattes;
 using User.Domain.AgregattesModel.ClientAgregattes;
 using User.Domain.AgregattesModel.UserAgregattes;
 using User.Domain.AgregattesModel.ValueObjects;
+using User.Infrastructure.Interceptors;
 
 namespace User.Infrastructure;
 
@@ -20,15 +21,18 @@ internal class UserContext : DbContext, IUnitOfWork
     
     private readonly IMediator _mediator;
     private readonly ILoggerFactory _loggerFactory;
+    private readonly ILogger<UserContext> _logger;  
 
     public UserContext(
         DbContextOptions<UserContext> options,
-        ILoggerFactory logger,
-        IMediator mediator
+        ILoggerFactory loggerFactory,
+        IMediator mediator,
+        ILogger<UserContext> logger
         ) : base(options)
     {
         _mediator = mediator;
-        _loggerFactory = logger;        
+        _loggerFactory = loggerFactory;        
+        _logger = logger;   
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -36,7 +40,7 @@ internal class UserContext : DbContext, IUnitOfWork
         optionsBuilder
             .UseLoggerFactory(_loggerFactory)
             .EnableSensitiveDataLogging(true)
-            .EnableDetailedErrors(true)
+            .EnableDetailedErrors(true)            
             .UseQueryTrackingBehavior(QueryTrackingBehavior.TrackAll);            
 
         base.OnConfiguring(optionsBuilder);
@@ -70,6 +74,8 @@ internal class UserContext : DbContext, IUnitOfWork
         {
             _loggerFactory.CreateLogger<UserContext>()
                 .LogError($"Falha ao savar os registros {err.Message}");
+
+            throw;
         }
     }   
 
@@ -94,7 +100,7 @@ internal class UserContext : DbContext, IUnitOfWork
             {
                 _loggerFactory.CreateLogger<UserContext>().LogError(err.Message);
             }
-        }
+        }        
     }
 
 
