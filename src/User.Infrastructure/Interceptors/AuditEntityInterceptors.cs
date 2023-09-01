@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
-using User.Domain.Abstracts;
 using User.Domain.Extensions;
 
 namespace User.Infrastructure.Interceptors;

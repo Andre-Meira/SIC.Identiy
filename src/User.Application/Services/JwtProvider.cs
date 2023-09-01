@@ -1,22 +1,19 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
-using System.Net.Http;
 using System.Security.Claims;
 using System.Text;
-using User.Domain.Abstracts;
-using User.Domain.AgregattesModel.UserAgregattes;
 
 namespace User.Application.Services;
 
 public class JwtProvider
 {
     public JwtProvider(
-        Guid id, 
-        string nome, 
+        Guid id,
+        string userName,
         string email)
     {
         Id = id;
-        Name = nome;
+        UserName = userName;
         Email = email;
     }
 
@@ -24,7 +21,7 @@ public class JwtProvider
         string? email = null)
     {        
         Id = Guid.Empty;
-        Name = name;
+        UserName = name;
         Email = email;
     }
 
@@ -32,13 +29,13 @@ public class JwtProvider
 
     public Guid Id { get; private set; }
 
-    public string? Name { get; private set; }
+    public string? UserName { get; private set; }
 
     public string? Email { get; private set; }
     
     public string GenerateToken()
     {
-        if (Name is null  && Email is null) 
+        if (UserName is null  && Email is null) 
             throw new ArgumentNullException();  
 
         var tokenHandler = new JwtSecurityTokenHandler();
@@ -47,7 +44,7 @@ public class JwtProvider
         {
             Subject = new ClaimsIdentity(new Claim[]
             {
-                    new Claim(ClaimTypes.Name, Name!),
+                    new Claim(ClaimTypes.Name, UserName!),
                     new Claim(ClaimTypes.Email, Email!),
                     new Claim(ClaimTypes.Sid, Id.ToString())
             }),
