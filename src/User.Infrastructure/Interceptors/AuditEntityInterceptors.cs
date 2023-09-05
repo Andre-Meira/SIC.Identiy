@@ -19,8 +19,8 @@ internal sealed class AuditEntityInterceptors : SaveChangesInterceptor
         InterceptionResult<int> result, CancellationToken cancellationToken = default)
     {
         var trackers = eventData.Context?.ChangeTracker;
-        _logger.LogInformation($"O usuario {Activity.Current?.GetUser()} solicitou a seguintes alteração:" +
-            $" { trackers?.DebugView.LongView}");
+        _logger.LogInformation("O usuario {Alteracao} solicitou a seguintes alteração, {User}" 
+            ,Activity.Current?.GetUser(), trackers?.DebugView.LongView);
 
         return base.SavingChangesAsync(eventData, result, cancellationToken);
     }
@@ -28,7 +28,7 @@ internal sealed class AuditEntityInterceptors : SaveChangesInterceptor
     public override Task SaveChangesFailedAsync(DbContextErrorEventData eventData, 
         CancellationToken cancellationToken = default)
     {        
-        _logger.LogInformation($"Saving changes failed.");
+        _logger.LogInformation("Saving changes failed. error: {Error}", eventData.Exception.Message);
         return base.SaveChangesFailedAsync(eventData, cancellationToken);
     }
 }

@@ -5,9 +5,8 @@ using User.Domain.Abstracts;
 
 namespace User.Application;
 
-internal class LoggingBehaviors<TRequest, TResponse>
-    : IPipelineBehavior<TRequest, TResponse>
-    where TRequest : IRequest   
+internal class LoggingBehaviors<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+    where TRequest : IRequest<TResponse>
 {
     private readonly ILogger<LoggingBehaviors<TRequest, TResponse>> _logger;
 
@@ -17,7 +16,8 @@ internal class LoggingBehaviors<TRequest, TResponse>
         _logger = logger;
     }
 
-    public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, 
+    public async Task<TResponse> Handle(TRequest request, 
+        RequestHandlerDelegate<TResponse> next, 
         CancellationToken cancellationToken)
     {
         var stopwatch = new Stopwatch();
@@ -25,22 +25,25 @@ internal class LoggingBehaviors<TRequest, TResponse>
 
         try
         {
-            
-            _logger.LogInformation($"Send Request {typeof(TRequest).Name}, {DateTime.Now}");
-            var result = await next();            
+
+            _logger.LogInformation("Send Request {NameCommand}, {Date}", 
+                typeof(TRequest).Name, DateTime.Now);
+
+            var result = await next();
             return result;
         }
-        catch (Exception err) when (err is not DomainExceptions) 
+        catch (Exception err) when (err is not DomainExceptions)
         {
-            _logger.LogError($"Request Error {typeof(TRequest).Name}, {DateTime.Now}, " +
-                $"n\' reson: {err.Message}");
+            _logger.LogError("Request {NameCommand} {Date}, erro {Error}",
+                    typeof(TRequest).Name, DateTime.Now, err.Message);
 
             throw;
         }
-        finally 
+        finally
         {
             stopwatch.Stop();
-            _logger.LogInformation($"Complet Request {typeof(TRequest).Name}, {DateTime.Now}, duration: {stopwatch.Elapsed}");
-        }        
+            _logger.LogInformation("Complet Request {NameCommand}, {Date}, duration: {DateFinish}",
+                typeof(TRequest).Name, DateTime.Now, stopwatch.Elapsed);
+        }
     }
 }

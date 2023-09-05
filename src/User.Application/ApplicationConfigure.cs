@@ -10,9 +10,9 @@ public static class Implementation
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
         Assembly assembly = Assembly.GetExecutingAssembly();
-        
-        services.AddMediatR(e => e.RegisterServicesFromAssembly(assembly));
+
         services.AddScoped(typeof(IPipelineBehavior<,>), typeof(LoggingBehaviors<,>));
+        services.AddMediatR(e => e.RegisterServicesFromAssembly(assembly));        
 
         return services;
     }

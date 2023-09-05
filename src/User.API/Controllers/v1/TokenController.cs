@@ -1,11 +1,7 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
-using System.Diagnostics;
 using User.API.Models;
 using User.Application.Commands;
-using User.Domain.Abstracts;
 
 namespace User.API.Controllers.v1
 {

@@ -23,7 +23,8 @@ internal class UserAcessRepository : IUserAcessRepository
         && e.Status == Status.Enable);
 
     public IEnumerable<UserAcess> GetAll(int itemsPerPage = 10)
-        => _userContext.UserAcesses.Where(e => e.Status == Status.Enable).Take(itemsPerPage);
+        => _userContext.UserAcesses.Where(e => e.Status == Status.Enable)
+        .OrderByDescending(e => e.DtCreation).Take(itemsPerPage);        
 
     public Task<UserAcess?> GetUserByEmail(Email email, 
         CancellationToken cancellationToken = default)
