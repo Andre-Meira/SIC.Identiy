@@ -5,7 +5,7 @@ using User.Domain.Enums;
 
 namespace User.Domain.AgregattesModel.UserAgregattes;
 
-public class UserAcess : Entity, IAggregate
+public class UserAcess : Entity, IAggregate, IAuditEntity
 {    
     public virtual Email Email { get; private set; }
         

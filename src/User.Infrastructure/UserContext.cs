@@ -6,7 +6,6 @@ using User.Domain.AgregattesModel.AttendantAgregattes;
 using User.Domain.AgregattesModel.ClientAgregattes;
 using User.Domain.AgregattesModel.UserAgregattes;
 using User.Domain.AgregattesModel.ValueObjects;
-using User.Infrastructure.Interceptors;
 
 namespace User.Infrastructure;
 
@@ -66,8 +65,6 @@ internal class UserContext : DbContext, IUnitOfWork
     {
         try
         {
-            SetEntityState();
-            await DispatchDomainEvents().ConfigureAwait(false);
             await base.SaveChangesAsync(cancellationToken);
         }
         catch (Exception err)

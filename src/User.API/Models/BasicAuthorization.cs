@@ -15,11 +15,15 @@ public record BasicAuthorization
     public BasicAuthorization(string authorizationHeader)
     {
         if (string.IsNullOrEmpty(authorizationHeader)) 
-            throw new ExceptionRequest("Authorization não pode ser vazia.", HttpStatusCode.Unauthorized);
+            throw new ExceptionRequest("Acesso Invalido", 
+                "Authorization não pode ser vazia.", 
+                HttpStatusCode.Unauthorized);
 
         if (!IsBasicAuthorization(authorizationHeader))
         {
-            throw new ExceptionRequest($"Authorization não é do tipo Basic", HttpStatusCode.Unauthorized);
+            throw new ExceptionRequest("Acesso Invalido", 
+                $"Authorization não é do tipo Basic", 
+                HttpStatusCode.Unauthorized);
         }
 
         var credentials = DecodeBasicCredentials(authorizationHeader);
@@ -27,7 +31,9 @@ public record BasicAuthorization
 
         if (parts.Length != 2)
         {
-            throw new ExceptionRequest($"Credenciais inválidas no cabeçalho de autorização Basic", HttpStatusCode.Unauthorized);
+            throw new ExceptionRequest("Acesso Invalido",
+                $"Credenciais inválidas no cabeçalho de autorização Basic", 
+                HttpStatusCode.Unauthorized);
         }
 
         Username = parts[0];

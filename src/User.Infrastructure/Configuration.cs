@@ -10,17 +10,18 @@ public static class Configuration
 {
     public static IServiceCollection AddInfrastructureContext(this IServiceCollection service)
     {
-        service.AddSingleton<AuditEntityInterceptors>();
-
-        string? connectionString =  Environment.GetEnvironmentVariable("connectionString");
-
+        string? connectionString = Environment.GetEnvironmentVariable("connectionString");
         if (connectionString == null) throw new ArgumentNullException(nameof(connectionString));
         
+        service.AddSingleton<AuditEntityInterceptors>();
+        service.AddSingleton<EventsDomainEntityInceptors>();
+               
         service.AddDbContext<UserContext>((sp,options)=> 
         {
             options.AddInterceptors(sp.GetService<AuditEntityInterceptors>()!);
-            options.UseNpgsql(connectionString);
+            options.AddInterceptors(sp.GetService<EventsDomainEntityInceptors>()!);
 
+            options.UseNpgsql(connectionString);
         },ServiceLifetime.Transient);
 
         service.AddRepositores();

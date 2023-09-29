@@ -6,7 +6,8 @@ namespace User.Domain.Abstracts;
 
 public interface IAuditEntity
 {       
-    Guid? IdUser => Activity.Current?.GetUser();
+    Guid? TokenUser => Activity.Current?.GetCurrentUser();
+    ActivityTraceId? TraceId => Activity.Current?.TraceId;
 }
 
 

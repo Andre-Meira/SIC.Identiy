@@ -1,3 +1,3 @@
 ﻿namespace User.Domain.Abstracts;
 
-public interface IAggregate : IAuditEntity { }
+public interface IAggregate { }

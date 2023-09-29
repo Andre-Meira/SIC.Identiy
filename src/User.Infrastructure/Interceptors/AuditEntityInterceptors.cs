@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Diagnostics;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 using User.Domain.Extensions;
@@ -20,7 +21,8 @@ internal sealed class AuditEntityInterceptors : SaveChangesInterceptor
     {
         var trackers = eventData.Context?.ChangeTracker;
         _logger.LogInformation("O usuario {Alteracao} solicitou a seguintes alteração, {User}" 
-            ,Activity.Current?.GetUser(), trackers?.DebugView.LongView);
+            ,Activity.Current?.GetCurrentUser(), trackers?.DebugView.LongView);
+        
 
         return base.SavingChangesAsync(eventData, result, cancellationToken);
     }

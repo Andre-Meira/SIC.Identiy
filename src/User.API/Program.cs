@@ -1,6 +1,6 @@
-using User.API.Filter;
 using User.Application;
 using User.API;
+using User.API.Middleware;
 
 string endpointSeq = Environment.GetEnvironmentVariable("SeqLogging") 
     ?? throw new ArgumentNullException(nameof(endpointSeq));
@@ -17,10 +17,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Host.AddLogginSerilog(configuration);
 
 
-builder.Services.AddControllers(e =>
-{
-    e.Filters.Add(typeof(ExceptionCustomFIlter));
-});
+builder.Services.AddControllers();
 
 builder.Services.AddUserAuthentication();
 builder.Services.ConfigureLogging();
@@ -32,10 +29,14 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddInfrastructure();
 builder.Services.AddApplication();
 
+builder.Services.AddTransient<ErrorHandlerMiddleware>();
+
 var app = builder.Build();
 
 app.UseSwagger();
 app.UseSwaggerUI();
+
+app.UseMiddleware<ErrorHandlerMiddleware>();
 
 app.UseAuthentication();
 app.UseAuthorization();

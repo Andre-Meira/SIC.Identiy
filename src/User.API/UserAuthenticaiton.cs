@@ -5,7 +5,6 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using User.API.Authorization;
-using User.API.Filter;
 
 namespace User.API;
 

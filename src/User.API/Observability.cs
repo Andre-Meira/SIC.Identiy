@@ -18,6 +18,7 @@ public static class Observability
         {
             configuration.WriteTo.Console(outputTemplate: @"[{Timestamp:HH:mm:ss} {Level:u3} {SourceContext} {Properties:j} Mensagem:{Message:lj}{NewLine}{Exception}");            
             configuration.MinimumLevel.Override("Microsoft", LogEventLevel.Warning);
+            configuration.MinimumLevel.Override("Microsoft.AspNetCore.Hosting.Diagnostics", LogEventLevel.Information);
             configuration.Enrich.FromLogContext();
 
             if (config.EndpointLoggin != null)
