@@ -1,6 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using User.Domain.Extensions;
 using System.Diagnostics;
-using User.Domain.Extensions;
+using User.Domain.Enums;
 
 namespace User.Domain.Abstracts;
 
@@ -8,6 +8,12 @@ public interface IAuditEntity
 {       
     Guid? TokenUser => Activity.Current?.GetCurrentUser();
     ActivityTraceId? TraceId => Activity.Current?.TraceId;
+    DateTime? CreatedAt => DateTime.UtcNow;
+    IReadOnlyCollection<AuditType> AuditTypes => _auditTypes;
+    Guid IdEntityDomain => _IdEntityDomain;
+
+    protected List<AuditType> _auditTypes { get;}
+    protected Guid _IdEntityDomain { get; }
 }
 
 

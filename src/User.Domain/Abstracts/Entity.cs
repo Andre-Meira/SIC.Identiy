@@ -21,7 +21,7 @@ public abstract class Entity : IEvent, INotificationDomain
     public Guid Id { get; private set; }
 
     [NotMapped]
-    public IReadOnlyCollection<Notification> Notifications => _notifications;
+    public IReadOnlyCollection<Notification> Notifications => _notifications;    
 
     public virtual void Create()
     {

@@ -26,9 +26,7 @@ namespace User.API.Controllers.v1
         
         public async Task<IActionResult> CreateUser([FromForm, Required] CreateUserCommand userCommand,
             CancellationToken cancellationToken)
-        {
-            throw new DomainExceptions();
-
+        {        
             Guid guid = await _mediator.Send(userCommand, cancellationToken).ConfigureAwait(false);
             return Ok(new { id_usuario = guid, mensagem = "Usuario Criado Com sucesso." });
         }

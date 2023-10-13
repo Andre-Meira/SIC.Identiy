@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using User.Domain.Repositores;
 using User.Infrastructure.Interceptors;
+using User.Infrastructure.Models;
 using User.Infrastructure.Repositores;
 
 namespace User.Infrastructure;
@@ -12,10 +13,19 @@ public static class Configuration
     {
         string? connectionString = Environment.GetEnvironmentVariable("connectionString");
         if (connectionString == null) throw new ArgumentNullException(nameof(connectionString));
-        
+
+
+        service.Configure<AuditStoreDatabaseSettings>(e =>
+        {
+            e.DatabaseName = "User";
+            e.ConnectionString = "mongodb://localhost:27017";
+            e.BooksCollectionName = "Audit";
+        });
+
         service.AddSingleton<AuditEntityInterceptors>();
         service.AddSingleton<EventsDomainEntityInceptors>();
-               
+        service.AddSingleton<AuditDomainService>();
+
         service.AddDbContext<UserContext>((sp,options)=> 
         {
             options.AddInterceptors(sp.GetService<AuditEntityInterceptors>()!);

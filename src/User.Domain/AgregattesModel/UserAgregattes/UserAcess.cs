@@ -16,6 +16,14 @@ public class UserAcess : Entity, IAggregate, IAuditEntity
     public Status Status { get; private set; }
     public UserTypeEnum UserType { get; }
 
+    List<AuditType> IAuditEntity._auditTypes => new List<AuditType> 
+    {
+        AuditType.Delete, 
+        AuditType.Update 
+    };
+
+    Guid IAuditEntity._IdEntityDomain => Id;
+
     protected UserAcess() { }
 
     public UserAcess(
@@ -32,7 +40,7 @@ public class UserAcess : Entity, IAggregate, IAuditEntity
         Status = Status.Enable;
         UserType = userType;
 
-        Validate();
+        Validate();        
     }
 
     public override void Validate()
