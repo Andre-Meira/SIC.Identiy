@@ -10,8 +10,7 @@ using User.Domain.AgregattesModel.ValueObjects;
 namespace User.Infrastructure;
 
 internal class UserContext : DbContext, IUnitOfWork
-{
-    
+{    
     public DbSet<UserAcess> UserAcesses { get; private set; } = null!;
 
     public DbSet<Attendant> Attendant { get; private set; } = null!;
@@ -47,6 +46,8 @@ internal class UserContext : DbContext, IUnitOfWork
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Ignore<Email>();
+        modelBuilder.Ignore<Password>();
         modelBuilder.Owned<Email>();
         modelBuilder.Owned<Password>();
 
@@ -65,6 +66,7 @@ internal class UserContext : DbContext, IUnitOfWork
     {
         try
         {
+            SetEntityState();
             await base.SaveChangesAsync(cancellationToken);
         }
         catch (Exception err)
@@ -74,31 +76,7 @@ internal class UserContext : DbContext, IUnitOfWork
 
             throw;
         }
-    }   
-
-    private async Task DispatchDomainEvents()
-    {
-        var domainEntities = ChangeTracker
-            .Entries<Entity>()
-            .Where(x => x.Entity.GetEvents()?.Count > 0)
-            .ToList();
-
-        var domainEvents = domainEntities
-            .SelectMany(x => x.Entity.GetEvents())
-            .ToList();
-
-        foreach (var domainEvent in domainEvents)
-        {
-            try
-            {
-                await _mediator.Publish(domainEvent);
-            }
-            catch (Exception err)
-            {
-                _loggerFactory.CreateLogger<UserContext>().LogError(err.Message);
-            }
-        }        
-    }
+    }       
 
 
     private void SetEntityState()

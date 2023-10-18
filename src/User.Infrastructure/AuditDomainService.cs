@@ -1,25 +1,24 @@
 ﻿using Microsoft.Extensions.Options;
 using MongoDB.Driver;
+using User.Infrastructure.Abstract;
 using User.Infrastructure.Models;
 
 namespace User.Infrastructure;
 
-internal sealed class AuditDomainService 
+internal sealed class AuditDomainService : IAuditDomainService
 {
     private readonly IMongoCollection<AuditStoreDatabase> _auditStoreCollection;
 
     public AuditDomainService(IOptions<AuditStoreDatabaseSettings> bookStoreDatabaseSettings)
     {
-        var mongoClient = new MongoClient(
-            bookStoreDatabaseSettings.Value.ConnectionString);
+        MongoClient mongoClient = new MongoClient(bookStoreDatabaseSettings.Value.ConnectionString);
 
-        var mongoDatabase = mongoClient.GetDatabase(
-            bookStoreDatabaseSettings.Value.DatabaseName);
+        IMongoDatabase mongoDatabase = mongoClient.GetDatabase(bookStoreDatabaseSettings.Value.DatabaseName);
 
         _auditStoreCollection = mongoDatabase.GetCollection<AuditStoreDatabase>
             (bookStoreDatabaseSettings.Value.BooksCollectionName);
     }
 
-    public async Task CreateAsync(AuditStoreDatabase auditStore) 
-        => await _auditStoreCollection.InsertOneAsync(auditStore);
+    public async Task CreateAsync(AuditStoreDatabase auditStore, CancellationToken cancellation = default) 
+        => await _auditStoreCollection.InsertOneAsync(auditStore, cancellationToken:cancellation);
 }

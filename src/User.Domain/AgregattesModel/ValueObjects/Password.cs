@@ -2,11 +2,9 @@
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace User.Domain.AgregattesModel.ValueObjects;
 
-[NotMapped]
 public record Password : ValueObject
 {
     private const int MinimumLength = 12;
@@ -51,15 +49,9 @@ public record Password : ValueObject
     public override void Validate()
     {
         if (string.IsNullOrEmpty(_passwordOriginal))
-        {
-            AddNotification(new Notification("Senha", "Senha não pode ser nula ou vazio"));
-            return;
-        }            
+            throw new DomainExceptions("Senha não pode ser nula ou vazio");
 
         if (IsComplex(_passwordOriginal) == false)
-        {
-            AddNotification(new Notification("Senha", "A senha não atende às políticas de complexidade."));
-            return;
-        }
+            throw new DomainExceptions("A senha não atende às políticas de complexidade.");
     }
 }

@@ -16,7 +16,7 @@ internal class UserAcess_Mapping : IEntityTypeConfiguration<UserAcess>
         builder.Property(e => e.DtCreation).HasColumnName("dt_created").IsRequired();
         builder.Property(e => e.Status).HasColumnName("status").IsRequired();
         
-        builder.OwnsOne(e => e.Email, a => a.Property(e => e.Value).HasColumnName("email"));
-        builder.OwnsOne(e => e.Password, a => a.Property(e => e.Value).HasColumnName("password"));        
+        builder.OwnsOne(e => e.Email, a => a.Property(e => e.Value).IsRequired().HasColumnName("email"));
+        builder.OwnsOne(e => e.Password, a => a.Property(e => e.Value).IsRequired().HasColumnName("password"));        
     }
 }

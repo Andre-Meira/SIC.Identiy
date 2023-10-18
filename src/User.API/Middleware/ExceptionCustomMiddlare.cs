@@ -42,7 +42,7 @@ public class ErrorHandlerMiddleware : IMiddleware
         if (exception is ExceptionRequest)
         {
             ExceptionRequest domainExceptions = (ExceptionRequest)exception;
-            object data = domainExceptions.Data;
+            object data = domainExceptions.Response;
             int code = (int)domainExceptions.StatusCode;
 
             ResultController resultController = new ResultController(domainExceptions.Message, code, data);

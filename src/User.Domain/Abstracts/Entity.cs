@@ -1,12 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace User.Domain.Abstracts;
 
 public abstract class Entity : IEvent, INotificationDomain
 {
-    readonly List<IDomainEvent> _events;
+    private readonly List<IDomainEvent> _events;
 
-    readonly List<Notification> _notifications;
+    private readonly List<Notification> _notifications;
 
     private Guid _id = Guid.Empty;
 
@@ -21,6 +22,7 @@ public abstract class Entity : IEvent, INotificationDomain
     public Guid Id { get; private set; }
 
     [NotMapped]
+    [JsonIgnore]
     public IReadOnlyCollection<Notification> Notifications => _notifications;    
 
     public virtual void Create()

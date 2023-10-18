@@ -2,17 +2,7 @@
 
 namespace User.Domain.Abstracts;
 
-public abstract record ValueObject : INotificationDomain
+public abstract record ValueObject 
 {
-    private readonly List<Notification> _notifications = new List<Notification>();
-
-    [NotMapped]
-    public IReadOnlyCollection<Notification> Notifications => _notifications;
-
-    public void AddNotification(Notification notification)
-    {
-        _notifications.Add(notification);
-    }
-
     public abstract void Validate();
 }

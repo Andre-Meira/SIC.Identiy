@@ -8,11 +8,9 @@ public interface IAuditEntity
 {       
     Guid? TokenUser => Activity.Current?.GetCurrentUser();
     ActivityTraceId? TraceId => Activity.Current?.TraceId;
-    DateTime? CreatedAt => DateTime.UtcNow;
-    IReadOnlyCollection<AuditType> AuditTypes => _auditTypes;
+    DateTime? CreatedAt => DateTime.UtcNow;    
     Guid IdEntityDomain => _IdEntityDomain;
-
-    protected List<AuditType> _auditTypes { get;}
+    
     protected Guid _IdEntityDomain { get; }
 }
 

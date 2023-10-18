@@ -7,21 +7,15 @@ namespace User.Domain.AgregattesModel.UserAgregattes;
 
 public class UserAcess : Entity, IAggregate, IAuditEntity
 {    
-    public virtual Email Email { get; private set; }
-        
-    public virtual Password Password { get; private set; }
-    
-    public string Name { get; private set; }
-    public DateTime DtCreation { get; }
+    public virtual Email Email { get; private set; } = null!;
+
+    public virtual Password Password { get; private set; } = null!;
+
+    public string Name { get; private set; } = null!;
+    public DateTime DtCreation { get; } 
     public Status Status { get; private set; }
     public UserTypeEnum UserType { get; }
-
-    List<AuditType> IAuditEntity._auditTypes => new List<AuditType> 
-    {
-        AuditType.Delete, 
-        AuditType.Update 
-    };
-
+   
     Guid IAuditEntity._IdEntityDomain => Id;
 
     protected UserAcess() { }
@@ -49,10 +43,7 @@ public class UserAcess : Entity, IAggregate, IAuditEntity
             AddNotification(new Notification("Name", "Nome não pode ser nulo ou vazio"));
 
         Email.Validate();
-        Password.Validate();
-
-        AddNotification(Email.Notifications.ToList());
-        AddNotification(Password.Notifications.ToList());
+        Password.Validate();        
 
         base.Validate();
     }

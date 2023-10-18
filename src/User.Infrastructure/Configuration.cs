@@ -1,6 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using System.Reflection.Emit;
+using User.Domain.AgregattesModel.ValueObjects;
 using User.Domain.Repositores;
+using User.Infrastructure.Abstract;
 using User.Infrastructure.Interceptors;
 using User.Infrastructure.Models;
 using User.Infrastructure.Repositores;
@@ -24,10 +27,10 @@ public static class Configuration
 
         service.AddSingleton<AuditEntityInterceptors>();
         service.AddSingleton<EventsDomainEntityInceptors>();
-        service.AddSingleton<AuditDomainService>();
+        service.AddSingleton<IAuditDomainService, AuditDomainService>();
 
         service.AddDbContext<UserContext>((sp,options)=> 
-        {
+        {            
             options.AddInterceptors(sp.GetService<AuditEntityInterceptors>()!);
             options.AddInterceptors(sp.GetService<EventsDomainEntityInceptors>()!);
 
